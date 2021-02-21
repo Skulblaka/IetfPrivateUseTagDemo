@@ -1,0 +1,29 @@
+﻿@page
+@using Microsoft.AspNetCore.Localization;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+@using Microsoft.AspNetCore.Builder
+@model IndexModel
+@inject IViewLocalizer Localizer
+@inject IOptions<RequestLocalizationOptions> options
+@{
+    ViewData["Title"] = "Home page";
+    var requestCulture = Request.HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture;
+    var selectList = options.Value.SupportedCultures.Select(x => new SelectListItem(x.EnglishName, x.Name, x.Name == requestCulture.Culture.Name));
+}
+
+<div class="text-center">
+    <h1 class="display-4">@Localizer["Greeting"]</h1>
+    <p>@Localizer["HowAreYou"]</p>
+
+    <form>
+        <div class="row">
+            <div class="col-4 offset-3">
+                @Html.DropDownList("culture", selectList, new { @class = "form-control" })
+            </div>
+            <div class="col-2">
+                <button class="form-control btn btn-primary" type="submit">Apply</button>
+            </div>
+        </div>
+    </form>
+</div>
